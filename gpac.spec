@@ -26,6 +26,11 @@ Patch11:	https://patch-diff.githubusercontent.com/raw/gpac/gpac/pull/2994.patch
 URL:		https://gpac.io/
 License:	LGPLv2+
 Group:		Video
+BuildRequires:	autoconf
+BuildRequires:	automake
+BuildRequires:	libtool-base
+BuildRequires:	slibtool
+BuildRequires:	make
 BuildRequires:	imagemagick
 BuildRequires:	a52dec-devel
 BuildRequires:	graphviz
