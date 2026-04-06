@@ -1,5 +1,3 @@
-%global Werror_cflags %{nil}
-
 %bcond_with check
 
 %define major	16
@@ -152,6 +150,7 @@ technology which may be covered by software patents.
 %build
 # Not a regular autotools configure: use the provided one
 %set_build_flags
+export CFLAGS="%{optflags} -Wno-error=incompatible-pointer-types"
 ./configure	--verbose \
 		--prefix=%{_prefix} \
 		--mandir=%{_mandir} \
