@@ -1,4 +1,6 @@
- %bcond_with check
+%global Werror_cflags %{nil}
+
+%bcond_with check
 
 %define major	16
 %define libname	%mklibname %{name}
