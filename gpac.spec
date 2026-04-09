@@ -19,9 +19,9 @@ Patch0:		gpac-26.02.0-no-visibility-hidden.patch
 Patch1:		gpac-26.02.0-fix-compile.patch
 Patch2:		gpac-26.02.0-fix-all-implicit-decls.patch
 Patch3:		gpac-26.02.0-drop-rpath.patch
+Patch4:		gpac-26.02.0-fix-redefinition-error.patch
 BuildRequires:	autoconf
 BuildRequires:	automake
-BuildRequires:chrpath
 BuildRequires:	doxygen
 BuildRequires:	git
 BuildRequires:	graphviz
@@ -98,7 +98,7 @@ technology, covered by software patents.
 %{_bindir}/MP4Box
 %{_bindir}/MPEG4Gen
 %{_bindir}/X3DGen
-#{_bindir}/SVGGen
+%{_bindir}/SVGGen
 %{_bindir}/WGLGen
 %{_libdir}/%{name}/
 %{_datadir}/applications/%{name}.desktop
@@ -124,7 +124,7 @@ technology which may be covered by software patents.
 #-----------------------------------------------------------------------------
 
 %package -n %{devname}
-Summary:	Development headers and libraries for gpac
+Summary:	Development headers and library for gpac
 Group:		Development/C
 Requires:	%{libname} = %{EVRD}
 Provides:	gpac-devel = %{EVRD}
@@ -150,7 +150,6 @@ technology which may be covered by software patents.
 %build
 # Not a regular autotools configure: use the provided one
 %set_build_flags
-export CFLAGS="%{optflags} -Wno-error=incompatible-pointer-types"
 ./configure	--verbose \
 		--prefix=%{_prefix} \
 		--mandir=%{_mandir} \
@@ -183,11 +182,11 @@ export CFLAGS="%{optflags} -Wno-error=incompatible-pointer-types"
 sed -ie 's/DEBUGBUILD=no/DEBUGBUILD=yes/' config.mak
 
 # Build library, modules and apps
-%make_build all
+%make_build
 # Build generators
 %make_build sggen
-# SVGGen is not automatically built, but the build fails
-#make_build -C applications/generators/SVG
+# FIXME: Won't automatically build
+%make_build -j1 -C applications/generators/SVG
 # Build devel docs
 %make_build doc
 
@@ -196,8 +195,8 @@ sed -ie 's/DEBUGBUILD=no/DEBUGBUILD=yes/' config.mak
 %make_install install-lib
 
 # Install built generators binaries
-for i in MPEG4 X3D; do
-	install -m755 applications/generators/$i/${i}Gen %{buildroot}%{_bindir}
+for i in MPEG4 X3D SVG; do
+    install -m755 applications/generators/$i/${i}Gen %{buildroot}%{_bindir}
 done
 install -m755 applications/generators/WebGLGen/WGLGen %{buildroot}%{_bindir}/
 
