@@ -186,7 +186,7 @@ sed -ie 's/DEBUGBUILD=no/DEBUGBUILD=yes/' config.mak
 # Build generators
 %make_build sggen
 # FIXME: Won't automatically build
-%make_build -j1 -C applications/generators/SVG
+%make_build -C applications/generators/SVG
 # Build devel docs
 %make_build doc
 
